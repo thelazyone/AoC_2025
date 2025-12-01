@@ -1,0 +1,21 @@
+# Rust
+/target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Advent of Code - Don't commit puzzle inputs per AoC creator's request
+# (Uncommment if you want to keep inputs private)
+# day*/input.txt
+
