@@ -8,35 +8,35 @@ fn parse_input(input: &str) -> Vec<String> {
 }
 
 // applying a rotation (positive and negative) with a module
-fn change_position(value: i32, module: i32, delta: i32) -> (i32, i32) {
+fn change_position(value: u32, module: u32, delta: i32) -> (u32, u32) {
 
     // If positive, just add and do the module.
     if delta > 0 {
-        let mut rotations = (value + delta) / module;
-        if (value + delta) % module == 0 {
+        let mut rotations = (value as i32 + delta) / module as i32;
+        if (value as i32 + delta) % module as i32 == 0 {
             rotations -= 1;
         }
-        println!("delta is positive, value+delta is {} and crossings are {}", value + delta, rotations);
-        return ((value + delta) % module, rotations);
+        return ((value + delta as u32) % module, rotations as u32);
     }
 
     // if negative, it's trickier. First subtract, if <0 it means there are crossing, take
     // the remaining part and calculate the module
     else if delta < 0 {
-        if value + delta >= 0 {
-            println!("delta is negative but no crossings");
-            return (value + delta, 0);
+        if value as i32 + delta >= 0 {
+            // If the sum is positive, we don't need to cross anything.
+            return ((value as i32 + delta) as u32, 0); // We know it's positive anyways.
         }
         else {
-            let mut rotations = (value + delta).abs() / module;
+            // Otherwise, there is across... But if the start point is zero, it is a false positive.
+            let mut rotations: u32 = (value as i32 + delta).abs() as u32 / module;
             if value != 0 {
                 rotations += 1;
             }
-            if value + delta % module == 0 {
-                rotations -= 1;
+            if (value as i32 + delta) % module as i32 == 0 {
+                rotations = std::cmp::max(rotations - 1, 0); // making sure itìs positive
             }
-            println!("delta is negative, crossings are {} and value + delta is {}", rotations, value + delta);
-            return ((value + delta + module * (rotations + 1)) % module, rotations);
+            let module_shift = module as i32 * (rotations as i32 + 1);
+            return ((value as i32 + delta + module_shift) as u32 % module, rotations as u32);
         }
     }
 
@@ -45,7 +45,7 @@ fn change_position(value: i32, module: i32, delta: i32) -> (i32, i32) {
     }
 }
 
-fn part1(data: &[String]) -> i32 {
+fn part1(data: &[String]) -> u32 {
     let mut current_position = 50;
     let module = 100;
 
@@ -63,19 +63,18 @@ fn part1(data: &[String]) -> i32 {
         if current_position == 0 {
             zero_counter += 1;
         }
-        println!("current_position: {}", current_position);
     }
     zero_counter
 }
 
-fn part2(data: &[String]) -> i32 {
+fn part2(data: &[String]) -> u32 {
     let mut current_position = 50;
     let module = 100;
 
     // reading each line, checking if the first character is L or R (or none), then extracting the integer
     // from the rest of the line.
     let mut zero_counter = 0;
-    let mut zero_crossed: i32;
+    let mut zero_crossed: u32;
     for line in data {
         let direction = line.chars().next().unwrap();
         let steps: i32 = line[1..].parse::<i32>().unwrap();
@@ -87,8 +86,9 @@ fn part2(data: &[String]) -> i32 {
         if current_position == 0 {
             zero_counter += 1;
         }
+
+        // Adding the crossing too. Note that crossings because zero is the start point are ignored.
         zero_counter += zero_crossed;
-        println!("current_position: {}, counter: {}", current_position, zero_counter);
     }
     zero_counter
 }
