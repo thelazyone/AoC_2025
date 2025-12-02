@@ -96,11 +96,7 @@ fn part2(data: &[(i64, i64)]) -> i64 {
     // Brute forcing for part 2
     let mut all_faulty_values : Vec<i64> = Vec::new();
 
-    // println!("data: {:?}", data);
-
     for (a, b) in data {
-        // println!("checking: {:?}-{:?}", a, b);
-
         // Iterating every value in the range, applying checks.
         for i in *a..=*b {
 
@@ -143,6 +139,7 @@ fn part2(data: &[(i64, i64)]) -> i64 {
             }
         }
     }
+    
     // returning the sum of the faulty values
     all_faulty_values.iter().sum()
 }
@@ -174,6 +171,6 @@ mod tests {
         let sample = fs::read_to_string("day02/sample.txt")
             .expect("Failed to read sample.txt");
         let data = parse_input(&sample);
-        assert_eq!(part2(&data), 4174379265); // TODO: Update expected value   
+        assert_eq!(part2(&data), 4174379265);  
     }
 }
