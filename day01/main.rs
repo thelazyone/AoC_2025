@@ -56,7 +56,7 @@ fn part1(data: &[String]) -> u32 {
         let direction = line.chars().next().unwrap();
         let steps: i32 = line[1..].parse::<i32>().unwrap();
         match direction {
-            'L' => (current_position, _) = change_position(current_position, module, steps * -1),
+            'L' => (current_position, _) = change_position(current_position, module, -steps),
             'R' => (current_position, _) = change_position(current_position, module, steps),
             _ => panic!("Invalid direction: {}", direction),
         }
@@ -79,7 +79,7 @@ fn part2(data: &[String]) -> u32 {
         let direction = line.chars().next().unwrap();
         let steps: i32 = line[1..].parse::<i32>().unwrap();
         match direction {
-            'L' => (current_position, zero_crossed) = change_position(current_position, module, steps * -1),
+            'L' => (current_position, zero_crossed) = change_position(current_position, module, -steps),
             'R' => (current_position, zero_crossed) = change_position(current_position, module, steps),
             _ => panic!("Invalid direction: {}", direction),
         }
@@ -120,6 +120,6 @@ mod tests {
         let sample = fs::read_to_string("day01/sample.txt")
             .expect("Failed to read sample.txt");
         let data = parse_input(&sample);
-        assert_eq!(part2(&data), 6); // TODO: Update expected value
+        assert_eq!(part2(&data), 6);
     }
 }
